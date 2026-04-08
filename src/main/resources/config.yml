@@ -1,0 +1,136 @@
+# ==========================================
+#          DonutShop - Configuration
+# ==========================================
+
+# Do NOT change this value manually. It is used to detect config format changes.
+config-version: 1
+
+main-inventory:
+  title: 'sʜᴏᴘ'
+  layout:
+    - 'XXXXXXXXX'
+    - 'XXOOOOOXX'
+    - '<XXXXXXX>'
+
+add-stack-item:
+  display-name: '<green>Add <amount>'
+  type: LIME_STAINED_GLASS_PANE
+
+remove-stack-item:
+  display-name: '<red>Remove <amount>'
+  type: RED_STAINED_GLASS_PANE
+
+set-to-min-item:
+  display-name: '<gold>Set to <amount>'
+  type: ORANGE_STAINED_GLASS_PANE
+
+set-to-max-item:
+  display-name: '<gold>Set to <amount>'
+  type: ORANGE_STAINED_GLASS_PANE
+
+categories:
+  end:
+    slot: 12
+    rows: 3
+    icon:
+      display-name: '<green>ᴇɴᴅ'
+      type: ENDER_CHEST
+      lore:
+        - '<white>Click to view the end shop'
+    inventory-name: '<dark_gray>sʜᴏᴘ - ᴇɴᴅ'
+    layout:
+      - 'XXXXXXXXX'
+      - 'OOOOOOOOO'
+      - '<XXXXXXX>'
+  nether:
+    slot: 15
+    rows: 3
+    icon:
+      display-name: '<green>ɴᴇᴛʜᴇʀ'
+      type: RED_NETHER_BRICKS
+      lore:
+        - '<white>Click to view the nether shop'
+    inventory-name: '<dark_gray>sʜᴏᴘ - ɴᴇᴛʜᴇʀ'
+    layout:
+      - 'XXXXXXXXX'
+      - 'OOOOOOOOO'
+      - '<XXXXXXX>'
+  gear:
+    slot: 14
+    rows: 3
+    icon:
+      display-name: '<green>ɢᴇᴀʀ'
+      type: TOTEM_OF_UNDYING
+      lore:
+        - '<white>Click to view the gear shop'
+    inventory-name: '<dark_gray>sʜᴏᴘ - ɢᴇᴀʀ'
+    layout:
+      - 'XXXXXXXXX'
+      - 'OOOOOOOOO'
+      - '<XXXXXXX>'
+  food:
+    slot: 13
+    rows: 3
+    icon:
+      display-name: '<green>ғᴏᴏᴅ'
+      type: COOKED_BEEF
+      lore:
+        - '<white>Click to view the food shop'
+    inventory-name: '<dark_gray>sʜᴏᴘ - ғᴏᴏᴅ'
+    layout:
+      - 'XXXXXXXXX'
+      - 'OOOOOOOOO'
+      - '<XXXXXXX>'
+  shard:
+    slot: 11
+    rows: 3
+    icon:
+      display-name: '<light_purple>sʜᴀʀᴅ'
+      type: AMETHYST_SHARD
+      lore:
+        - '<white>Click to view the shard shop'
+    inventory-name: '<dark_gray>sʜᴏᴘ - sʜᴀʀᴅ'
+    layout:
+      - 'XXOOOOOXX'
+      - 'OOOOOOOOO'
+      - '<XXXXXXX>'
+
+# Print in console everytime someone is buying something.
+print-console:
+  enabled: false
+
+items:
+  filler:
+    type: GRAY_STAINED_GLASS_PANE
+    display-name: ''
+    lore: []
+  back-page:
+    name: '<color:#e00202>ʙᴀᴄᴋ'
+    material: RED_STAINED_GLASS_PANE
+    lore:
+      - '<white>Click to return'
+  next-page:
+    name: '<color:#02de4f>ɴᴇxᴛ'
+    material: ARROW
+    lore:
+      - '<white>Click to go the next page'
+  roll-back-page:
+    name: '<color:#02de4f>ʀᴏʟʟʙᴀᴄᴋ'
+    material: ARROW
+    lore:
+      - '<white>Click to go the previous page'
+  decline:
+    name: '<color:#e00202>ᴄᴀɴᴄᴇʟ'
+    material: RED_STAINED_GLASS_PANE
+    lore:
+      - '<white>Click to cancel'
+  accept:
+    name: '<color:#02de4f>ᴄᴏɴғɪʀᴍ'
+    material: LIME_STAINED_GLASS_PANE
+    lore:
+      - '<white>Click to buy'
+
+shards-economy-name: 'Shards'
+shards-balance-placeholder: '%player_shards%'
+shards-take-command: 'shard take %player% %amount%'
+shards-give-command: 'shard give %player% %amount%'

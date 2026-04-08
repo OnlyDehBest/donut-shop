@@ -1,0 +1,47 @@
+items:
+  - material: POTATO
+    display-name: "<yellow>Potato"
+    amount: 1
+    price: 25.0
+    max-stack: 64
+  - material: SWEET_BERRIES
+    display-name: "<red>Sweet Berries"
+    amount: 1
+    price: 15.0
+    max-stack: 64
+  - material: MELON_SLICE
+    display-name: "<green>Melon Slice"
+    amount: 1
+    price: 10.0
+    max-stack: 64
+  - material: CARROT
+    display-name: "<gold>Carrot"
+    amount: 1
+    price: 25.0
+    max-stack: 64
+  - material: APPLE
+    display-name: "<red>Apple"
+    amount: 1
+    price: 25.0
+    max-stack: 64
+  - material: COOKED_CHICKEN
+    display-name: "<gold>Cooked Chicken"
+    amount: 1
+    price: 30.0
+    max-stack: 64
+  - material: COOKED_BEEF
+    display-name: "<gold>Steak"
+    amount: 1
+    price: 35.0
+    max-stack: 64
+  - material: GOLDEN_CARROT
+    display-name: "<gold>Golden Carrot"
+    amount: 1
+    price: 50.0
+    max-stack: 64
+  - material: GOLDEN_APPLE
+    display-name: "<aqua>Golden Apple"
+    amount: 1
+    price: 250.0
+    max-stack: 64
+

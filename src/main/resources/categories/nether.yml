@@ -1,0 +1,47 @@
+items:
+  - material: BLAZE_ROD
+    display-name: "<gold>Blaze Rod"
+    amount: 1
+    price: 150.0
+    max-stack: 64
+  - material: NETHER_WART
+    display-name: "<dark_red>Nether Wart"
+    amount: 1
+    price: 15.0
+    max-stack: 64
+  - material: GLOWSTONE_DUST
+    display-name: "<yellow>Glowstone Dust"
+    amount: 1
+    price: 15.0
+    max-stack: 64
+  - material: MAGMA_CREAM
+    display-name: "<gold>Magma Cream"
+    amount: 1
+    price: 15.0
+    max-stack: 64
+  - material: GHAST_TEAR
+    display-name: "<white>Ghast Tear"
+    amount: 1
+    price: 350.0
+    max-stack: 64
+  - material: NETHER_QUARTZ_ORE
+    display-name: "<white>Nether Quartz Ore"
+    amount: 1
+    price: 15.0
+    max-stack: 64
+  - material: SOUL_SAND
+    display-name: "<gold>Soul Sand"
+    amount: 1
+    price: 15.0
+    max-stack: 64
+  - material: MAGMA_BLOCK
+    display-name: "<gold>Magma Block"
+    amount: 1
+    price: 35.0
+    max-stack: 64
+  - material: CRYING_OBSIDIAN
+    display-name: "<dark_purple>Crying Obsidian"
+    amount: 1
+    price: 150.0
+    max-stack: 64
+

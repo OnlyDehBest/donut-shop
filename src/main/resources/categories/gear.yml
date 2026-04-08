@@ -1,0 +1,47 @@
+items:
+  - material: OBSIDIAN
+    display-name: "<dark_purple>Obsidian"
+    amount: 1
+    price: 100.0
+    max-stack: 64
+  - material: END_CRYSTAL
+    display-name: "<light_purple>End Crystal"
+    amount: 1
+    price: 350.0
+    max-stack: 64
+  - material: RESPAWN_ANCHOR
+    display-name: "<dark_purple>Respawn Anchor"
+    amount: 1
+    price: 1000.0
+    max-stack: 64
+  - material: GLOWSTONE
+    display-name: "<yellow>Glowstone"
+    amount: 1
+    price: 100.0
+    max-stack: 64
+  - material: TOTEM_OF_UNDYING
+    display-name: "<gold>Totem of Undying"
+    amount: 1
+    price: 1250.0
+    max-stack: 1
+  - material: ENDER_PEARL
+    display-name: "<dark_green>Ender Pearl"
+    amount: 1
+    price: 75.0
+    max-stack: 16
+  - material: GOLDEN_APPLE
+    display-name: "<aqua>Golden Apple"
+    amount: 1
+    price: 250.0
+    max-stack: 64
+  - material: EXPERIENCE_BOTTLE
+    display-name: "<yellow>Bottle o' Enchanting"
+    amount: 1
+    price: 100.0
+    max-stack: 64
+  - material: ARROW
+    display-name: "<white>Arrow"
+    amount: 1
+    price: 500.0
+    max-stack: 64
+

@@ -1,0 +1,47 @@
+items:
+  - material: ENDER_CHEST
+    display-name: "<dark_purple>Ender Chest"
+    amount: 1
+    price: 2500.0
+    max-stack: 64
+  - material: ENDER_PEARL
+    display-name: "<dark_green>Ender Pearl"
+    amount: 1
+    price: 75.0
+    max-stack: 16
+  - material: END_STONE
+    display-name: "<yellow>End Stone"
+    amount: 16
+    price: 32.0
+    max-stack: 64
+  - material: DRAGON_BREATH
+    display-name: "<yellow>Dragon's Breath"
+    amount: 1
+    price: 32.0
+    max-stack: 64
+  - material: END_ROD
+    display-name: "<white>End Rod"
+    amount: 1
+    price: 100.0
+    max-stack: 64
+  - material: CHORUS_FRUIT
+    display-name: "<light_purple>Chorus Fruit"
+    amount: 1
+    price: 10.0
+    max-stack: 64
+  - material: POPPED_CHORUS_FRUIT
+    display-name: "<light_purple>Popped Chorus Fruit"
+    amount: 1
+    price: 15.0
+    max-stack: 64
+  - material: SHULKER_SHELL
+    display-name: "<light_purple>Shulker Shell"
+    amount: 1
+    price: 35.0
+    max-stack: 64
+  - material: SHULKER_BOX
+    display-name: "<light_purple>Shulker Box"
+    amount: 1
+    price: 800.0
+    max-stack: 1
+

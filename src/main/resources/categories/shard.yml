@@ -1,0 +1,113 @@
+items:
+  - material: TRIPWIRE_HOOK
+    display-name: "<green>Common Key"
+    amount: 1
+    price: 200.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "crates givekey %player% common 1"
+  - material: TRIPWIRE_HOOK
+    display-name: "<aqua>Prime Key"
+    amount: 1
+    price: 1500.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "crates givekey %player% prime 1"
+  - material: TRIPWIRE_HOOK
+    display-name: "<gold>Gold Key"
+    amount: 1
+    price: 1500.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "crates givekey %player% gold 1"
+  - material: TRIPWIRE_HOOK
+    display-name: "<dark_purple>Amethyst Key"
+    amount: 1
+    price: 4000.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "crates givekey %player% amethyst 1"
+  - material: TRIPWIRE_HOOK
+    display-name: "<red>Crimson Key"
+    amount: 1
+    price: 2000.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "crates givekey %player% crimson 1"
+  - material: SPAWNER
+    display-name: "<light_purple>Pig Spawner"
+    amount: 1
+    price: 250.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "give %player% pig_spawner 1"
+  - material: SPAWNER
+    display-name: "<light_purple>Cow Spawner"
+    amount: 1
+    price: 350.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "give %player% cow_spawner 1"
+  - material: SPAWNER
+    display-name: "<light_purple>Zombie Spawner"
+    amount: 1
+    price: 400.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "give %player% zombie_spawner 1"
+  - material: SPAWNER
+    display-name: "<light_purple>Spider Spawner"
+    amount: 1
+    price: 750.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "give %player% spider_spawner 1"
+  - material: SPAWNER
+    display-name: "<light_purple>Skeleton Spawner"
+    amount: 1
+    price: 500.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "give %player% skeleton_spawner 1"
+  - material: SPAWNER
+    display-name: "<light_purple>Creeper Spawner"
+    amount: 1
+    price: 625.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "give %player% creeper_spawner 1"
+  - material: SPAWNER
+    display-name: "<light_purple>Zombified Piglin Spawner"
+    amount: 1
+    price: 750.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "give %player% zombified_piglin_spawner 1"
+  - material: SPAWNER
+    display-name: "<light_purple>Blaze Spawner"
+    amount: 1
+    price: 1000.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "give %player% blaze_spawner 1"
+  - material: SPAWNER
+    display-name: "<light_purple>Iron Golem Spawner"
+    amount: 1
+    price: 1500.0
+    max-stack: 1
+    economy: shards
+    commands:
+      - "give %player% iron_golem_spawner 1"

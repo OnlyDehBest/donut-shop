@@ -1,0 +1,40 @@
+open-shop:
+  sound: ui.button.click
+  volume: 0.5
+  pitch: 1.0
+  enabled: true
+open-category:
+  sound: ui.button.click
+  volume: 0.5
+  pitch: 1.2
+  enabled: true
+navigate-page:
+  sound: ui.button.click
+  volume: 0.3
+  pitch: 1.5
+  enabled: true
+select-item:
+  sound: block.note_block.pling
+  volume: 0.5
+  pitch: 1.2
+  enabled: true
+confirm-purchase:
+  sound: entity.experience_orb.pickup
+  volume: 1.0
+  pitch: 1.0
+  enabled: true
+cancel-purchase:
+  sound: ui.button.click
+  volume: 0.5
+  pitch: 0.8
+  enabled: true
+purchase-error:
+  sound: entity.villager.no
+  volume: 1.0
+  pitch: 1.0
+  enabled: true
+back-button:
+  sound: ui.button.click
+  volume: 0.5
+  pitch: 0.8
+  enabled: true

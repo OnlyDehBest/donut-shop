@@ -1,0 +1,19 @@
+prefix: "&#4498DB&lᴅ&#479FDC&lᴏ&#4BA7DD&lɴ&#4EAEDE&lᴜ&#52B5DF&lᴛ&#55BCDF&lꜱ&#58C4E0&lʜ&#5CCBE1&lᴏ&#5FD2E2&lᴘ <dark_gray>➟<reset>"
+
+# Purchase messages
+insufficient-funds: "<red>Insufficient funds!"
+inventory-full: "<red>Your inventory is full!"
+purchase-success: "<green>Purchased <white><amount>x</white> <item> <green>for <gold><price>"
+transaction-error: "<red>Transaction error!"
+
+# Admin
+shop-reloaded: "<green>Shop configuration reloaded!"
+
+# Confirm GUI
+confirm-title: "Confirm Purchase"
+
+# Item lore
+item-price: "<gray>Price: <gold><price>"
+item-amount: "<gray>Amount: <white><amount>"
+item-click: "<yellow>Click to purchase"
+
