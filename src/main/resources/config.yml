@@ -99,6 +99,9 @@ categories:
 print-console:
   enabled: false
 
+# Stamps purchased items with an NBT tag so they don't stack with vanilla items.
+anti-dupe: true
+
 items:
   filler:
     type: GRAY_STAINED_GLASS_PANE

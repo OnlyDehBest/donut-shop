@@ -13,40 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConfirmGui {
-
-    public static final int SET_MIN_SLOT   = 9;
-    public static final int REMOVE_16_SLOT = 11;
-    public static final int REMOVE_1_SLOT  = 12;
-    public static final int ITEM_SLOT      = 13;
-    public static final int ADD_1_SLOT     = 14;
-    public static final int ADD_16_SLOT    = 15;
-    public static final int SET_MAX_SLOT   = 17;
-
-    public static final int CONFIRM_SLOT = 30;
-    public static final int CANCEL_SLOT  = 32;
-
-    public static int getDelta(int slot) {
-        return switch (slot) {
-            case REMOVE_16_SLOT -> -16;
-            case REMOVE_1_SLOT  -> -1;
-            case ADD_1_SLOT     -> 1;
-            case ADD_16_SLOT    -> 16;
-            default -> 0;
-        };
-    }
-
-    public static boolean isSetSlot(int slot) {
-        return slot == SET_MIN_SLOT || slot == SET_MAX_SLOT;
-    }
-
-    public static boolean isAmountSlot(int slot) {
-        return getDelta(slot) != 0 || isSetSlot(slot);
-    }
 
     public static void open(Player player, ShopItem item, String categoryId, int page) {
         open(player, item, categoryId, page, item.amount());
@@ -57,7 +29,7 @@ public class ConfirmGui {
         MainConfig config = plugin.getMainConfig();
         amount = Math.max(1, Math.min(amount, item.maxStack()));
 
-        GuiHolder holder = new GuiHolder(GuiHolder.GuiType.CONFIRM, categoryId, page);
+        GuiHolder holder = new GuiHolder(categoryId, page);
         holder.setConfirmItem(item);
         holder.setSelectedAmount(amount);
 
@@ -80,9 +52,9 @@ public class ConfirmGui {
         }
 
         if (amount > 1) {
-            inventory.setItem(SET_MIN_SLOT, config.getSetToMinItem());
-            inventory.setItem(REMOVE_16_SLOT, config.getRemoveStackItem(16));
-            inventory.setItem(REMOVE_1_SLOT, config.getRemoveStackItem(1));
+            inventory.setItem(9, tagAction(config.getSetToMinItem(), GuiKeys.SET_MIN));
+            inventory.setItem(11, tagDelta(config.getRemoveStackItem(16), -16));
+            inventory.setItem(12, tagDelta(config.getRemoveStackItem(1), -1));
         }
 
         ItemStack preview = new ItemStack(item.material(), Math.min(amount, 64));
@@ -105,19 +77,33 @@ public class ConfirmGui {
         }
 
         preview.setItemMeta(previewMeta);
-        inventory.setItem(ITEM_SLOT, preview);
+        inventory.setItem(13, preview);
 
         if (amount < item.maxStack()) {
-            inventory.setItem(ADD_1_SLOT, config.getAddStackItem(1));
-            inventory.setItem(ADD_16_SLOT, config.getAddStackItem(16));
-            inventory.setItem(SET_MAX_SLOT, config.getSetToMaxItem(item.maxStack()));
+            inventory.setItem(14, tagDelta(config.getAddStackItem(1), 1));
+            inventory.setItem(15, tagDelta(config.getAddStackItem(16), 16));
+            inventory.setItem(17, tagAction(config.getSetToMaxItem(item.maxStack()), GuiKeys.SET_MAX));
         }
 
-        inventory.setItem(CONFIRM_SLOT, config.getAcceptItem());
-        inventory.setItem(CANCEL_SLOT, config.getDeclineItem());
+        inventory.setItem(30, tagAction(config.getAcceptItem(), GuiKeys.CONFIRM));
+        inventory.setItem(32, tagAction(config.getDeclineItem(), GuiKeys.CANCEL));
 
         holder.setInventory(inventory);
         player.openInventory(inventory);
     }
 
+    private static ItemStack tagAction(ItemStack stack, String action) {
+        ItemMeta meta = stack.getItemMeta();
+        meta.getPersistentDataContainer().set(GuiKeys.ACTION, PersistentDataType.STRING, action);
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    private static ItemStack tagDelta(ItemStack stack, int delta) {
+        ItemMeta meta = stack.getItemMeta();
+        meta.getPersistentDataContainer().set(GuiKeys.ACTION, PersistentDataType.STRING, GuiKeys.CHANGE_AMOUNT);
+        meta.getPersistentDataContainer().set(GuiKeys.DELTA, PersistentDataType.INTEGER, delta);
+        stack.setItemMeta(meta);
+        return stack;
+    }
 }

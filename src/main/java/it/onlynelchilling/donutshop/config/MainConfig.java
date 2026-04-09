@@ -33,6 +33,7 @@ public class MainConfig {
     private ItemStack cachedDecline;
     private ItemStack cachedAccept;
     private boolean cachedPrintConsole;
+    private boolean cachedAntiDupe;
     private String cachedShardsName;
     private String cachedShardsBalancePlaceholder;
     private String cachedShardsTakeCommand;
@@ -42,6 +43,8 @@ public class MainConfig {
     private ItemStack cachedRemove1;
     private ItemStack cachedRemove16;
     private ItemStack cachedSetMin;
+    private Material cachedSetMaxMaterial;
+    private String cachedSetMaxDisplayName;
 
     public MainConfig(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -60,6 +63,7 @@ public class MainConfig {
         cachedMainTitle = colorize(getConfig().getString("main-inventory.title"));
         cachedMainLayout = List.copyOf(getConfig().getStringList("main-inventory.layout"));
         cachedPrintConsole = getConfig().getBoolean("print-console.enabled");
+        cachedAntiDupe = getConfig().getBoolean("anti-dupe", true);
 
         cachedShardsName = getConfig().getString("shards-economy-name");
         if (cachedShardsName == null) cachedShardsName = "Shards";
@@ -115,6 +119,8 @@ public class MainConfig {
                 parseMaterial(getConfig().getString("set-to-min-item.type")),
                 getConfig().getString("set-to-min-item.display-name"),
                 List.of(), Placeholder.unparsed("amount", "1"));
+        cachedSetMaxMaterial = parseMaterial(getConfig().getString("set-to-max-item.type"));
+        cachedSetMaxDisplayName = getConfig().getString("set-to-max-item.display-name");
     }
 
     private static void migrateIfNeeded(JavaPlugin plugin) {
@@ -144,28 +150,73 @@ public class MainConfig {
     public static String convertLegacy(String text) {
         if (text == null || text.isEmpty()) return text;
 
-        text = text.replaceAll("&#([0-9a-fA-F]{6})", "<color:#$1>");
+        int len = text.length();
+        StringBuilder sb = new StringBuilder(len + 16);
 
-        text = text.replace("&l", "<bold>").replace("&L", "<bold>");
-        text = text.replace("&o", "<italic>").replace("&O", "<italic>");
-        text = text.replace("&n", "<underlined>").replace("&N", "<underlined>");
-        text = text.replace("&m", "<strikethrough>").replace("&M", "<strikethrough>");
-        text = text.replace("&k", "<obfuscated>").replace("&K", "<obfuscated>");
-        text = text.replace("&r", "<reset>").replace("&R", "<reset>");
+        for (int i = 0; i < len; i++) {
+            char c = text.charAt(i);
+            if (c != '&' || i + 1 >= len) {
+                sb.append(c);
+                continue;
+            }
 
-        text = text.replace("&0", "<black>").replace("&1", "<dark_blue>");
-        text = text.replace("&2", "<dark_green>").replace("&3", "<dark_aqua>");
-        text = text.replace("&4", "<dark_red>").replace("&5", "<dark_purple>");
-        text = text.replace("&6", "<gold>").replace("&7", "<gray>");
-        text = text.replace("&8", "<dark_gray>").replace("&9", "<blue>");
-        text = text.replace("&a", "<green>").replace("&A", "<green>");
-        text = text.replace("&b", "<aqua>").replace("&B", "<aqua>");
-        text = text.replace("&c", "<red>").replace("&C", "<red>");
-        text = text.replace("&d", "<light_purple>").replace("&D", "<light_purple>");
-        text = text.replace("&e", "<yellow>").replace("&E", "<yellow>");
-        text = text.replace("&f", "<white>").replace("&F", "<white>");
+            char next = text.charAt(i + 1);
 
-        return text;
+            if (next == '#' && i + 7 < len) {
+                String hex = text.substring(i + 2, i + 8);
+                if (isHex(hex)) {
+                    sb.append("<color:#").append(hex).append('>');
+                    i += 7;
+                    continue;
+                }
+            }
+
+            String tag = legacyTag(next);
+            if (tag != null) {
+                sb.append(tag);
+                i++;
+            } else {
+                sb.append(c);
+            }
+        }
+
+        return sb.toString();
+    }
+
+    private static boolean isHex(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'))) return false;
+        }
+        return true;
+    }
+
+    private static String legacyTag(char code) {
+        return switch (code) {
+            case '0' -> "<black>";
+            case '1' -> "<dark_blue>";
+            case '2' -> "<dark_green>";
+            case '3' -> "<dark_aqua>";
+            case '4' -> "<dark_red>";
+            case '5' -> "<dark_purple>";
+            case '6' -> "<gold>";
+            case '7' -> "<gray>";
+            case '8' -> "<dark_gray>";
+            case '9' -> "<blue>";
+            case 'a', 'A' -> "<green>";
+            case 'b', 'B' -> "<aqua>";
+            case 'c', 'C' -> "<red>";
+            case 'd', 'D' -> "<light_purple>";
+            case 'e', 'E' -> "<yellow>";
+            case 'f', 'F' -> "<white>";
+            case 'l', 'L' -> "<bold>";
+            case 'o', 'O' -> "<italic>";
+            case 'n', 'N' -> "<underlined>";
+            case 'm', 'M' -> "<strikethrough>";
+            case 'k', 'K' -> "<obfuscated>";
+            case 'r', 'R' -> "<reset>";
+            default -> null;
+        };
     }
 
     public static List<Component> colorizeList(List<String> list, TagResolver... resolvers) {
@@ -201,6 +252,10 @@ public class MainConfig {
         return cachedPrintConsole;
     }
 
+    public boolean isAntiDupe() {
+        return cachedAntiDupe;
+    }
+
     public ItemStack getFillerItem() { return cachedFiller.clone(); }
     public ItemStack getBackPageItem() { return cachedBackPage.clone(); }
     public ItemStack getNextPageItem() { return cachedNextPage.clone(); }
@@ -221,12 +276,8 @@ public class MainConfig {
     }
 
     public ItemStack getSetToMaxItem(int amount) {
-        return buildItem(
-                parseMaterial(getConfig().getString("set-to-max-item.type")),
-                getConfig().getString("set-to-max-item.display-name"),
-                List.of(),
-                Placeholder.unparsed("amount", String.valueOf(amount))
-        );
+        return buildItem(cachedSetMaxMaterial, cachedSetMaxDisplayName, List.of(),
+                Placeholder.unparsed("amount", String.valueOf(amount)));
     }
 
     public ConfigurationSection getCategorySection(String id) {

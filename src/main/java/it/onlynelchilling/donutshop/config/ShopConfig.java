@@ -10,7 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,6 @@ public class ShopConfig {
     private final JavaPlugin plugin;
     private final MainConfig mainConfig;
     private final Map<String, Category> categories = new LinkedHashMap<>();
-    private final Map<Integer, Category> slotToCategory = new HashMap<>();
 
     public ShopConfig(JavaPlugin plugin, MainConfig mainConfig) {
         this.plugin = plugin;
@@ -48,7 +46,6 @@ public class ShopConfig {
 
     public void load() {
         categories.clear();
-        slotToCategory.clear();
         File categoriesDir = new File(plugin.getDataFolder(), "categories");
         if (!categoriesDir.exists() || !categoriesDir.isDirectory()) return;
 
@@ -129,7 +126,6 @@ public class ShopConfig {
                 );
 
                 categories.put(categoryId, category);
-                slotToCategory.put(slot, category);
             } catch (Exception e) {
                 plugin.getLogger().warning("Failed to load category " + file.getName() + ": " + e.getMessage());
             }
@@ -138,9 +134,5 @@ public class ShopConfig {
 
     public Map<String, Category> getCategories() {
         return categories;
-    }
-
-    public Category getCategoryBySlot(int slot) {
-        return slotToCategory.get(slot);
     }
 }
