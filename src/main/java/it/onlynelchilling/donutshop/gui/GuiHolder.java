@@ -13,8 +13,6 @@ public class GuiHolder implements InventoryHolder {
     private int selectedAmount = 1;
     private boolean locked;
 
-    // ...existing code...
-
     public boolean isLocked() {
         return locked;
     }
