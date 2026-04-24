@@ -138,7 +138,7 @@ public class MainConfig {
         }
     }
 
-    public YamlConfiguration getConfig() {
+    private YamlConfiguration getConfig() {
         return configFile.getConfig();
     }
 
@@ -229,7 +229,7 @@ public class MainConfig {
         return result;
     }
 
-    public static ItemStack buildItem(Material material, String name, List<String> loreStrings, TagResolver... resolvers) {
+    private static ItemStack buildItem(Material material, String name, List<String> loreStrings, TagResolver... resolvers) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
         meta.displayName(colorize(name, resolvers));
@@ -280,7 +280,7 @@ public class MainConfig {
                 Placeholder.unparsed("amount", String.valueOf(amount)));
     }
 
-    public ConfigurationSection getCategorySection(String id) {
+    private ConfigurationSection getCategorySection(String id) {
         return getConfig().getConfigurationSection("categories." + id);
     }
 

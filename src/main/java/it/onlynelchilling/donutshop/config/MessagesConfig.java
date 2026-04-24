@@ -69,7 +69,7 @@ public class MessagesConfig {
         sender.sendMessage(getPrefixed(key, resolvers));
     }
 
-    public String getRaw(String key) {
+    private String getRaw(String key) {
         return messageCache.get(key);
     }
 }
