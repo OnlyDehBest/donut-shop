@@ -3,6 +3,8 @@ package it.onlynelchilling.donutshop.gui;
 import it.onlynelchilling.donutshop.DonutShop;
 import it.onlynelchilling.donutshop.config.Category;
 import it.onlynelchilling.donutshop.config.MainConfig;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -14,18 +16,17 @@ import java.util.List;
 
 public class ShopGui {
 
-    private static Inventory cached;
+    private static final String CACHE_KEY = "main";
+    private static final Cache<String, Inventory> cache = Caffeine.newBuilder().build();
 
     public static void invalidate() {
-        cached = null;
+        cache.invalidateAll();
     }
 
     public static void open(Player player) {
-        if (cached == null) {
-            cached = build();
-        }
+        Inventory inventory = cache.get(CACHE_KEY, k -> build());
         DonutShop.getInstance().getSoundConfig().play(player, "open-shop");
-        player.openInventory(cached);
+        player.openInventory(inventory);
     }
 
     private static Inventory build() {

@@ -25,6 +25,10 @@
                   <pattern>co.aikar.locales</pattern>
                   <shadedPattern>it.onlynelchilling.donutshop.locales</shadedPattern>
                 </relocation>
+                <relocation>
+                  <pattern>com.github.benmanes.caffeine</pattern>
+                  <shadedPattern>it.onlynelchilling.donutshop.caffeine</shadedPattern>
+                </relocation>
               </relocations>
             </configuration>
           </execution>

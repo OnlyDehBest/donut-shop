@@ -58,6 +58,11 @@
             <version>2.12.2</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>3.2.4</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -81,6 +86,10 @@
                                 <relocation>
                                     <pattern>co.aikar.locales</pattern>
                                     <shadedPattern>it.onlynelchilling.donutshop.locales</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.github.benmanes.caffeine</pattern>
+                                    <shadedPattern>it.onlynelchilling.donutshop.caffeine</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

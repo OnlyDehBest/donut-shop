@@ -5,6 +5,8 @@ import it.onlynelchilling.donutshop.config.Category;
 import it.onlynelchilling.donutshop.config.MainConfig;
 import it.onlynelchilling.donutshop.config.MessagesConfig;
 import it.onlynelchilling.donutshop.config.ShopItem;
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
@@ -17,16 +19,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CategoryGui {
 
-    private static final Map<String, Inventory> cache = new HashMap<>();
+    private static final Cache<String, Inventory> cache = Caffeine.newBuilder().build();
 
     public static void invalidateAll() {
-        cache.clear();
+        cache.invalidateAll();
     }
 
     public static void open(Player player, Category category, int page) {
@@ -35,11 +35,8 @@ public class CategoryGui {
         page = Math.max(0, Math.min(page, totalPages - 1));
 
         String key = category.id() + ":" + page;
-        Inventory inventory = cache.get(key);
-        if (inventory == null) {
-            inventory = build(category, page, totalPages);
-            cache.put(key, inventory);
-        }
+        int finalPage = page;
+        Inventory inventory = cache.get(key, k -> build(category, finalPage, totalPages));
         player.openInventory(inventory);
     }
 
