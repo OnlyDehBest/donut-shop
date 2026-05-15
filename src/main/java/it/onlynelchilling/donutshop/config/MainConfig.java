@@ -14,12 +14,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class MainConfig {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
-    private static final int CURRENT_VERSION = 1;
+    private static final int CURRENT_VERSION = 2;
 
     private final JavaPlugin plugin;
     private final ConfigFile configFile;
@@ -34,10 +37,8 @@ public class MainConfig {
     private ItemStack cachedAccept;
     private boolean cachedPrintConsole;
     private boolean cachedAntiDupe;
-    private String cachedShardsName;
-    private String cachedShardsBalancePlaceholder;
-    private String cachedShardsTakeCommand;
-    private String cachedShardsGiveCommand;
+    private boolean cachedDebug;
+    private final Map<String, CustomEconomy> cachedCustomEconomies = new LinkedHashMap<>();
     private ItemStack cachedAdd1;
     private ItemStack cachedAdd16;
     private ItemStack cachedRemove1;
@@ -64,15 +65,9 @@ public class MainConfig {
         cachedMainLayout = List.copyOf(getConfig().getStringList("main-inventory.layout"));
         cachedPrintConsole = getConfig().getBoolean("print-console.enabled");
         cachedAntiDupe = getConfig().getBoolean("anti-dupe", true);
+        cachedDebug = getConfig().getBoolean("debug", false);
 
-        cachedShardsName = getConfig().getString("shards-economy-name");
-        if (cachedShardsName == null) cachedShardsName = "Shards";
-        cachedShardsBalancePlaceholder = getConfig().getString("shards-balance-placeholder");
-        if (cachedShardsBalancePlaceholder == null) cachedShardsBalancePlaceholder = "";
-        cachedShardsTakeCommand = getConfig().getString("shards-take-command");
-        if (cachedShardsTakeCommand == null) cachedShardsTakeCommand = "";
-        cachedShardsGiveCommand = getConfig().getString("shards-give-command");
-        if (cachedShardsGiveCommand == null) cachedShardsGiveCommand = "";
+        loadCustomEconomies();
 
         cachedFiller = buildItem(
                 parseMaterial(getConfig().getString("items.filler.type")),
@@ -256,6 +251,10 @@ public class MainConfig {
         return cachedAntiDupe;
     }
 
+    public boolean isDebug() {
+        return cachedDebug;
+    }
+
     public ItemStack getFillerItem() { return cachedFiller.clone(); }
     public ItemStack getBackPageItem() { return cachedBackPage.clone(); }
     public ItemStack getNextPageItem() { return cachedNextPage.clone(); }
@@ -329,12 +328,41 @@ public class MainConfig {
         }
     }
 
-    public String getShardsName() { return cachedShardsName; }
-    public String getShardsBalancePlaceholder() { return cachedShardsBalancePlaceholder; }
-    public String getShardsTakeCommand() { return cachedShardsTakeCommand; }
-    public String getShardsGiveCommand() { return cachedShardsGiveCommand; }
+    public CustomEconomy getCustomEconomy(String id) {
+        if (id == null) return null;
+        return cachedCustomEconomies.get(id.trim().toLowerCase(Locale.ROOT));
+    }
 
-    public String formatShardsPrice(double price) {
-        return Math.round(price) + " " + cachedShardsName;
+    public Map<String, CustomEconomy> getCustomEconomies() {
+        return cachedCustomEconomies;
+    }
+
+    private void loadCustomEconomies() {
+        cachedCustomEconomies.clear();
+
+        ConfigurationSection section = getConfig().getConfigurationSection("custom-economies");
+        if (section != null) {
+            for (String id : section.getKeys(false)) {
+                ConfigurationSection sub = section.getConfigurationSection(id);
+                if (sub == null) continue;
+                String key = id.trim().toLowerCase(Locale.ROOT);
+                String displayName = sub.getString("display-name", id);
+                String placeholder = sub.getString("balance-placeholder", "");
+                String takeCmd = sub.getString("take-command", "");
+                String giveCmd = sub.getString("give-command", "");
+                cachedCustomEconomies.put(key,
+                        new CustomEconomy(key, displayName, placeholder, takeCmd, giveCmd));
+            }
+        }
+
+        if (!cachedCustomEconomies.containsKey("shards")
+                && getConfig().isSet("shards-balance-placeholder")) {
+            String displayName = getConfig().getString("shards-economy-name", "Shards");
+            String placeholder = getConfig().getString("shards-balance-placeholder", "");
+            String takeCmd = getConfig().getString("shards-take-command", "");
+            String giveCmd = getConfig().getString("shards-give-command", "");
+            cachedCustomEconomies.put("shards",
+                    new CustomEconomy("shards", displayName, placeholder, takeCmd, giveCmd));
+        }
     }
 }

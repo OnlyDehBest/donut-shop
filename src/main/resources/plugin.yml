@@ -5,7 +5,8 @@ main: it.onlynelchilling.donutshop.DonutShop
 api-version: '1.21'
 depend:
   - Vault
+  - Solum
 softdepend:
   - PlaceholderAPI
-folia-supported: true
+folia-supported: false
 

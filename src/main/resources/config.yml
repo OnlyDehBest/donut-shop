@@ -3,7 +3,7 @@
 # ==========================================
 
 # Do NOT change this value manually. It is used to detect config format changes.
-config-version: 1
+config-version: 2
 
 main-inventory:
   title: 'sʜᴏᴘ'
@@ -102,6 +102,9 @@ print-console:
 # Stamps purchased items with an NBT tag so they don't stack with vanilla items.
 anti-dupe: true
 
+# Enable verbose logging of custom-economy purchases (placeholder result, balance, price).
+debug: false
+
 items:
   filler:
     type: GRAY_STAINED_GLASS_PANE
@@ -133,7 +136,10 @@ items:
     lore:
       - '<white>Click to buy'
 
-shards-economy-name: 'Shards'
-shards-balance-placeholder: '%player_shards%'
-shards-take-command: 'shard take %player% %amount%'
-shards-give-command: 'shard give %player% %amount%'
+custom-economies:
+  shards:
+    display-name: 'Shards'
+    balance-placeholder: '%player_shards%'
+    take-command: 'shard take %player% %amount%'
+    give-command: 'shard give %player% %amount%'
+

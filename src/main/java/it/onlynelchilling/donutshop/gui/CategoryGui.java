@@ -2,6 +2,7 @@ package it.onlynelchilling.donutshop.gui;
 
 import it.onlynelchilling.donutshop.DonutShop;
 import it.onlynelchilling.donutshop.config.Category;
+import it.onlynelchilling.donutshop.config.CustomEconomy;
 import it.onlynelchilling.donutshop.config.MainConfig;
 import it.onlynelchilling.donutshop.config.MessagesConfig;
 import it.onlynelchilling.donutshop.config.ShopItem;
@@ -75,9 +76,13 @@ public class CategoryGui {
             ItemMeta meta = stack.getItemMeta();
             meta.displayName(item.displayName().decoration(TextDecoration.ITALIC, false));
 
-            String priceStr = "shards".equalsIgnoreCase(item.economy())
-                    ? config.formatShardsPrice(item.price())
-                    : economy.format(item.price());
+            String priceStr;
+            CustomEconomy custom = config.getCustomEconomy(item.economy());
+            if (custom != null) {
+                priceStr = custom.formatPrice(item.price());
+            } else {
+                priceStr = economy.format(item.price());
+            }
 
             List<Component> lore = new ArrayList<>();
             if (!msg.isEmpty("item-price")) {

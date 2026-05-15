@@ -1,6 +1,7 @@
 package it.onlynelchilling.donutshop.gui;
 
 import it.onlynelchilling.donutshop.DonutShop;
+import it.onlynelchilling.donutshop.config.CustomEconomy;
 import it.onlynelchilling.donutshop.config.MainConfig;
 import it.onlynelchilling.donutshop.config.MessagesConfig;
 import it.onlynelchilling.donutshop.config.ShopItem;
@@ -39,9 +40,13 @@ public class ConfirmGui {
         double unitPrice = item.price() / item.amount();
         double totalPrice = unitPrice * amount;
 
-        String priceStr = "shards".equalsIgnoreCase(item.economy())
-                ? config.formatShardsPrice(totalPrice)
-                : economy.format(totalPrice);
+        String priceStr;
+        CustomEconomy custom = config.getCustomEconomy(item.economy());
+        if (custom != null) {
+            priceStr = custom.formatPrice(totalPrice);
+        } else {
+            priceStr = economy.format(totalPrice);
+        }
 
         Inventory inventory = Bukkit.createInventory(holder, 36,
                 msg.get("confirm-title").decoration(TextDecoration.ITALIC, false));

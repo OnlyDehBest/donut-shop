@@ -1,6 +1,7 @@
 package it.onlynelchilling.donutshop.shop;
 
 import it.onlynelchilling.donutshop.DonutShop;
+import it.onlynelchilling.donutshop.config.CustomEconomy;
 import it.onlynelchilling.donutshop.config.MainConfig;
 import it.onlynelchilling.donutshop.config.MessagesConfig;
 import it.onlynelchilling.donutshop.config.ShopItem;
@@ -26,7 +27,7 @@ public class PurchaseHandler {
 
         double unitPrice = item.price() / item.amount();
         double totalPrice = unitPrice * amount;
-        boolean isShards = "shards".equalsIgnoreCase(item.economy());
+        CustomEconomy custom = config.getCustomEconomy(item.economy());
         boolean isCommandItem = item.commands() != null && !item.commands().isEmpty();
 
         if (!isCommandItem && !hasSpace(player, item.material(), amount, config.isAntiDupe())) {
@@ -35,18 +36,49 @@ public class PurchaseHandler {
             return;
         }
 
-        if (isShards) {
-            double balance = getShardsBalance(player, config);
+        if (custom != null) {
+            if (custom.takeCommand() == null || custom.takeCommand().isEmpty()) {
+                plugin.getLogger().severe("Cannot process '" + custom.id() + "' purchase for "
+                        + player.getName() + ": take-command is not configured");
+                msg.sendPrefixed(player, "transaction-error");
+                sounds.play(player, "purchase-error");
+                return;
+            }
+
+            double balance = getCustomBalance(player, custom, plugin);
+            if (balance < 0) {
+                msg.sendPrefixed(player, "transaction-error");
+                sounds.play(player, "purchase-error");
+                return;
+            }
+            if (config.isDebug()) {
+                plugin.getLogger().info("[debug] " + player.getName()
+                        + " purchase check: economy='" + custom.id()
+                        + "' balance=" + balance
+                        + " totalPrice=" + totalPrice
+                        + " (unitPrice=" + (item.price() / item.amount())
+                        + " * amount=" + amount + ")");
+            }
             if (balance < totalPrice) {
+                if (config.isDebug()) {
+                    plugin.getLogger().info("[debug] insufficient-funds for "
+                            + player.getName() + ": balance " + balance
+                            + " < required " + totalPrice);
+                }
                 msg.sendPrefixed(player, "insufficient-funds");
                 sounds.play(player, "purchase-error");
                 return;
             }
             long roundedPrice = Math.round(totalPrice);
-            String takeCmd = config.getShardsTakeCommand()
+            String takeCmd = custom.takeCommand()
                     .replace("%player%", player.getName())
                     .replace("%amount%", String.valueOf(roundedPrice));
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), takeCmd);
+            boolean dispatched = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), takeCmd);
+            if (!dispatched) {
+                msg.sendPrefixed(player, "transaction-error");
+                sounds.play(player, "purchase-error");
+                return;
+            }
         } else {
             Economy economy = plugin.getVaultHook().getEconomy();
             if (!economy.has(player, totalPrice)) {
@@ -81,8 +113,8 @@ public class PurchaseHandler {
             player.getInventory().addItem(stack);
         }
 
-        String priceStr = isShards
-                ? config.formatShardsPrice(totalPrice)
+        String priceStr = custom != null
+                ? custom.formatPrice(totalPrice)
                 : plugin.getVaultHook().getEconomy().format(totalPrice);
 
         msg.sendPrefixed(player, "purchase-success",
@@ -121,18 +153,80 @@ public class PurchaseHandler {
         return false;
     }
 
-    private static double getShardsBalance(Player player, MainConfig config) {
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            String placeholder = config.getShardsBalancePlaceholder();
-            if (!placeholder.isEmpty()) {
-                String result = PlaceholderHook.parse(player, placeholder);
-                try {
-                    return Double.parseDouble(result.replaceAll("[^\\d.]", ""));
-                } catch (NumberFormatException e) {
-                    return 0;
+    private static double getCustomBalance(Player player, CustomEconomy economy, DonutShop plugin) {
+        String placeholder = economy.balancePlaceholder();
+        if (placeholder == null || placeholder.isEmpty()) {
+            plugin.getLogger().severe("Cannot read '" + economy.id()
+                    + "' balance: balance-placeholder is empty in config.yml");
+            return -1;
+        }
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") == null) {
+            plugin.getLogger().severe("Cannot read '" + economy.id()
+                    + "' balance: PlaceholderAPI is not installed");
+            return -1;
+        }
+
+        String result = PlaceholderHook.parse(player, placeholder);
+        if (plugin.getMainConfig().isDebug()) {
+            plugin.getLogger().info("[debug] placeholder '" + placeholder
+                    + "' for " + player.getName() + " resolved to: '" + result + "'");
+        }
+        if (result.isEmpty() || result.equals(placeholder) || result.contains("%")) {
+            plugin.getLogger().warning("Placeholder '" + placeholder + "' for economy '"
+                    + economy.id() + "' was not resolved (got '" + result + "'). "
+                    + "Check that the expansion providing it is installed and the name is correct.");
+            return -1;
+        }
+
+        return parseLocalizedNumber(result, plugin, placeholder, economy.id());
+    }
+
+    private static double parseLocalizedNumber(String raw, DonutShop plugin, String placeholder, String economyId) {
+        String s = raw.trim();
+
+        double multiplier = 1.0;
+        if (!s.isEmpty()) {
+            String upper = s.toUpperCase();
+            if (upper.endsWith("KK")) {
+                multiplier = 1_000_000d;
+                s = s.substring(0, s.length() - 2);
+            } else {
+                char last = upper.charAt(upper.length() - 1);
+                switch (last) {
+                    case 'K' -> multiplier = 1_000d;
+                    case 'M' -> multiplier = 1_000_000d;
+                    case 'B' -> multiplier = 1_000_000_000d;
+                    case 'T' -> multiplier = 1_000_000_000_000d;
+                    default -> { }
+                }
+                if (multiplier != 1.0) {
+                    s = s.substring(0, s.length() - 1);
                 }
             }
         }
-        return Double.MAX_VALUE;
+
+        int lastComma = s.lastIndexOf(',');
+        int lastDot = s.lastIndexOf('.');
+        String normalized;
+        if (lastComma > lastDot) {
+            normalized = s.replace(".", "").replace(",", ".");
+        } else if (multiplier != 1.0) {
+            normalized = s.replace(",", ".");
+        } else {
+            normalized = s.replace(",", "");
+        }
+        normalized = normalized.replaceAll("[^\\d.\\-]", "");
+        if (normalized.isEmpty()) {
+            plugin.getLogger().warning("Placeholder '" + placeholder + "' (economy '"
+                    + economyId + "') returned a non-numeric value: '" + raw + "'");
+            return -1;
+        }
+        try {
+            return Double.parseDouble(normalized) * multiplier;
+        } catch (NumberFormatException e) {
+            plugin.getLogger().warning("Placeholder '" + placeholder + "' (economy '"
+                    + economyId + "') returned a non-numeric value: '" + raw + "'");
+            return -1;
+        }
     }
 }
