@@ -55,6 +55,11 @@ public class ShopConfig {
         for (File file : files) {
             try {
                 String categoryId = file.getName().replace(".yml", "");
+
+                if (!mainConfig.isCategoryEnabled(categoryId)) {
+                    continue;
+                }
+
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
 
                 Material icon = mainConfig.getCategoryIconType(categoryId);

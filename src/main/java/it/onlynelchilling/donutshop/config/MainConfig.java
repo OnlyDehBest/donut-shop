@@ -22,7 +22,7 @@ import java.util.Map;
 public class MainConfig {
 
     private static final MiniMessage MINI = MiniMessage.miniMessage();
-    private static final int CURRENT_VERSION = 2;
+    private static final int CURRENT_VERSION = 3;
 
     private final JavaPlugin plugin;
     private final ConfigFile configFile;
@@ -38,6 +38,7 @@ public class MainConfig {
     private boolean cachedPrintConsole;
     private boolean cachedAntiDupe;
     private boolean cachedDebug;
+    private boolean cachedKeepOpenAfterPurchase;
     private final Map<String, CustomEconomy> cachedCustomEconomies = new LinkedHashMap<>();
     private ItemStack cachedAdd1;
     private ItemStack cachedAdd16;
@@ -64,8 +65,9 @@ public class MainConfig {
         cachedMainTitle = colorize(getConfig().getString("main-inventory.title"));
         cachedMainLayout = List.copyOf(getConfig().getStringList("main-inventory.layout"));
         cachedPrintConsole = getConfig().getBoolean("print-console.enabled");
-        cachedAntiDupe = getConfig().getBoolean("anti-dupe", true);
-        cachedDebug = getConfig().getBoolean("debug", false);
+        cachedAntiDupe = getConfig().getBoolean("anti-dupe");
+        cachedDebug = getConfig().getBoolean("debug");
+        cachedKeepOpenAfterPurchase = getConfig().getBoolean("keep-open-after-purchase");
 
         loadCustomEconomies();
 
@@ -255,6 +257,10 @@ public class MainConfig {
         return cachedDebug;
     }
 
+    public boolean isKeepOpenAfterPurchase() {
+        return cachedKeepOpenAfterPurchase;
+    }
+
     public ItemStack getFillerItem() { return cachedFiller.clone(); }
     public ItemStack getBackPageItem() { return cachedBackPage.clone(); }
     public ItemStack getNextPageItem() { return cachedNextPage.clone(); }
@@ -286,6 +292,11 @@ public class MainConfig {
     public int getCategorySlot(String id) {
         ConfigurationSection s = getCategorySection(id);
         return s != null ? s.getInt("slot") : 0;
+    }
+
+    public boolean isCategoryEnabled(String id) {
+        ConfigurationSection s = getCategorySection(id);
+        return s == null || s.getBoolean("enabled");
     }
 
     public int getCategoryRows(String id) {

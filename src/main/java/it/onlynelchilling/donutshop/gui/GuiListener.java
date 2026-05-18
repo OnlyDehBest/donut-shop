@@ -114,12 +114,19 @@ public class GuiListener implements Listener {
         ShopItem item = holder.getConfirmItem();
         if (item == null) return;
         holder.lock();
-        PurchaseHandler.handle(player, item, holder.getSelectedAmount());
-        Category category = getCategory(holder);
-        if (category != null) {
-            CategoryGui.open(player, category, holder.getPage());
+        int amount = holder.getSelectedAmount();
+        String categoryId = holder.getCategoryId();
+        int page = holder.getPage();
+        PurchaseHandler.handle(player, item, amount);
+        if (plugin.getMainConfig().isKeepOpenAfterPurchase()) {
+            ConfirmGui.open(player, item, categoryId, page, amount);
         } else {
-            ShopGui.open(player);
+            Category category = getCategory(holder);
+            if (category != null) {
+                CategoryGui.open(player, category, page);
+            } else {
+                ShopGui.open(player);
+            }
         }
     }
 

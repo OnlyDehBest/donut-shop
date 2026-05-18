@@ -3,7 +3,7 @@
 # ==========================================
 
 # Do NOT change this value manually. It is used to detect config format changes.
-config-version: 2
+config-version: 4
 
 main-inventory:
   title: 'sʜᴏᴘ'
@@ -30,6 +30,8 @@ set-to-max-item:
 
 categories:
   end:
+    # Set to false to disable the category.
+    enabled: true
     slot: 12
     rows: 3
     icon:
@@ -43,6 +45,7 @@ categories:
       - 'OOOOOOOOO'
       - '<XXXXXXX>'
   nether:
+    enabled: true
     slot: 15
     rows: 3
     icon:
@@ -56,6 +59,7 @@ categories:
       - 'OOOOOOOOO'
       - '<XXXXXXX>'
   gear:
+    enabled: true
     slot: 14
     rows: 3
     icon:
@@ -69,6 +73,7 @@ categories:
       - 'OOOOOOOOO'
       - '<XXXXXXX>'
   food:
+    enabled: true
     slot: 13
     rows: 3
     icon:
@@ -82,6 +87,7 @@ categories:
       - 'OOOOOOOOO'
       - '<XXXXXXX>'
   shard:
+    enabled: true
     slot: 11
     rows: 3
     icon:
@@ -94,6 +100,9 @@ categories:
       - 'XXOOOOOXX'
       - 'OOOOOOOOO'
       - '<XXXXXXX>'
+
+# Keep the confirm GUI open after a successful purchase instead of returning to the category.
+keep-open-after-purchase: true
 
 # Print in console everytime someone is buying something.
 print-console:
